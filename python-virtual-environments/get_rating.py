@@ -161,7 +161,7 @@ for place in PlaceDetail:
 	else:
 		overall_rating = ((float(trip_review)/total_reviews)*float(trip_rating)) + ((float(open_review)/total_reviews)*float(open_rating)) + ((float(google_review)/total_reviews)*float(google_rating)) + ((float(door_review)/total_reviews)*float(door_rating)) + ((float(yelp_review)/total_reviews)*float(yelp_rating))
 
-	final_array.append({"SrNumber": place['SrNumber'], "overall_rating": overall_rating});
+	final_array.append({"SrNumber": place['SrNumber'], "overall_rating": overall_rating,"total_reviews":total_reviews});
 
 
 params = {"final_array": json.dumps(final_array)}
