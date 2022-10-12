@@ -17,15 +17,20 @@ options.add_argument("--disable-dev-shm-usage")
 
 
 #Local APIS links
-fetch_places_api = 'https://xplore-now.co/index.php/index.php/apis/getPlaceDetail';
-update_place_data_api = 'https://xplore-now.co/index.php/index.php/apis/insertPlaceDetail';
+#fetch_places_api = 'https://xplore-now.co/index.php/index.php/apis/getPlaceDetail';
+#update_place_data_api = 'https://xplore-now.co/index.php/index.php/apis/insertPlaceDetail';
 
 #Live APIS Links
-#fetch_places_api = 'https://xplore-now.co/index.php/apis/getPlaceDetail';
-#update_place_data_api = 'https://xplore-now.co/index.php/apis/insertPlaceDetail';
+fetch_places_api = 'https://xplore-now.co/index.php/apis/getPlaceDetail';
+update_place_data_api = 'https://xplore-now.co/index.php/apis/insertPlaceDetail';
 
+
+#response = ur.urlopen(fetch_places_api)
+#PlaceDetail = json.loads(response.read())
 response = ur.urlopen(fetch_places_api)
 PlaceDetail = json.loads(response.read())
+#print(PlaceDetail)
+#exit();
 
 # 1) Trip Advisor configration
 DRIVER_PATH1='/home/ubuntu/python_selenium/chromedriver'
@@ -36,25 +41,25 @@ trip_review_xpath = 'IcelI'
 
 # 2) Open Table  configration
 DRIVER_PATH2 = '/home/ubuntu/python_selenium/chromedriver'
-driver2 = webdriver.Chrome(executable_path=DRIVER_PATH2,options=options)
+#driver2 = webdriver.Chrome(executable_path=DRIVER_PATH2,options=options)
 open_rating_xpath = 'ratingInfo' #using ID
 open_review_xpath = 'reviewInfo' #using ID
 
 # 3) Google configration 
 DRIVER_PATH3 = '/home/ubuntu/python_selenium/chromedriver'
-driver3 = webdriver.Chrome(executable_path=DRIVER_PATH3,options=options)
+#driver3 = webdriver.Chrome(executable_path=DRIVER_PATH3,options=options)
 google_rating_xpath = 'Aq14fc'  #using ClassName
 google_review_xpath = 'hqzQac'  #using ClassName
 
 #4) Door Dash configration 
 DRIVER_PATH4 = '/home/ubuntu/python_selenium/chromedriver'
-driver4 = webdriver.Chrome(executable_path=DRIVER_PATH4,options=options)
+#driver4 = webdriver.Chrome(executable_path=DRIVER_PATH4,options=options)
 door_rating_xpath = '/html/body/div[1]/main/div/div[1]/div[1]/div/header/div[2]/div[1]/div[1]/div/div[3]/div/span[1]'
 door_review_xpath = '/html/body/div[1]/main/div/div[1]/div[1]/div/header/div[2]/div[1]/div[1]/div/div[3]/div/span[2]'
 
 # Yelp  configration
-DRIVER_PATH5 = '/home/this/Downloads/web_selenium/python-virtual-environments/chromedriver105_5'
-driver5 = webdriver.Chrome(executable_path=DRIVER_PATH5,options=options)
+DRIVER_PATH5 = '/home/ubuntu/python_selenium/chromedriver'
+#driver5 = webdriver.Chrome(executable_path=DRIVER_PATH5,options=options)
 yelp_rating_xpath = 'five-stars__09f24__mBKym five-stars--large__09f24__Waiqf display--inline-block__09f24__fEDiJ border-color--default__09f24__NPAKY'
 yelp_review_xpath = ' arrange-unit__09f24__rqHTg arrange-unit-fill__09f24__CUubG border-color--default__09f24__NPAKY nowrap__09f24__lBkC2'
 
@@ -106,11 +111,11 @@ for place in PlaceDetail:
 			########## open table rating
 	if open_table_url is not None:
 		try:
-			driver2.get(open_table_url)
-			open_table_rating=driver2.find_element(By.ID, open_rating_xpath)
+			driver1.get(open_table_url)
+			open_table_rating=driver1.find_element(By.ID, open_rating_xpath)
 			open_rating = ''.join(filter(whitelist.__contains__,open_table_rating.text)).replace(",", "")
 			print("Open table Rating : ",open_rating)
-			reviews=driver2.find_element(By.ID,open_review_xpath)
+			reviews=driver1.find_element(By.ID,open_review_xpath)
 			open_review = ''.join(filter(whitelist.__contains__,reviews.text)).replace(",", "")
 			print("Open table reviews : ",open_review)
 			total_reviews=total_reviews +float(open_review);
@@ -121,11 +126,11 @@ for place in PlaceDetail:
 	###################### door
 	if google_url is not None:
 		try:
-			driver3.get(google_url)
-			google_rating1=driver3.find_element(By.CLASS_NAME, google_rating_xpath)
+			driver.get(google_url)
+			google_rating1=driver.find_element(By.CLASS_NAME, google_rating_xpath)
 			google_rating=''.join(filter(whitelist.__contains__,google_rating1.text)).replace(",", "")
 			print("Google Rating : ",google_rating)
-			reviews=driver3.find_element(By.CLASS_NAME,google_review_xpath)
+			reviews=driver.find_element(By.CLASS_NAME,google_review_xpath)
 			google_review=''.join(filter(whitelist.__contains__,reviews.text)).replace(",", "")
 			print("Google reviews : ",google_review)
 			total_reviews=total_reviews +float(google_review);
@@ -149,13 +154,13 @@ for place in PlaceDetail:
 
 	if yelp_url is not None:
 		try:
-			driver5.get(yelp_url)
-			yelp_url_rating=driver5.find_element(By.CLASS_NAME,yelp_rating_xpath)
+			driver1.get(yelp_url)
+			yelp_url_rating=driver1.find_element(By.CLASS_NAME,yelp_rating_xpath)
 			text = yelp_url_rating.get_attribute("aria-label")
 			answer = ''.join(filter(whitelist.__contains__, text)).replace(",", "")
 			yelp_rating = answer
 			print("Yelp Rating : ",yelp_rating)
-			reviews=driver5.find_element(By.CLASS_NAME,yelp_review_xpath)
+			reviews=driver1.find_element(By.CLASS_NAME,yelp_review_xpath)
 			yelp_review = ''.join(filter(whitelist.__contains__,reviews.text)).replace(",", "")
 			print("Yelp Reviews : ",yelp_review)
 			total_reviews=total_reviews +float(yelp_review);
@@ -176,7 +181,7 @@ for place in PlaceDetail:
 params = {"final_array": json.dumps(final_array)}
 print(params)
 
-"""
+
 data = MultipartEncoder(fields = params)
 headers = {'Content-type': data.content_type}
 response = requests.post(
@@ -185,7 +190,7 @@ response = requests.post(
     headers = headers
 )
 print(response.text)
-"""
+
 #program end
 
 
@@ -205,3 +210,4 @@ reviews = driver.find_element("xpath", '/html/body/div[2]/div[2]/div[2]/div[2]/d
 print("Reviews : ",reviews.text)
 driver.quit()
 """
+
